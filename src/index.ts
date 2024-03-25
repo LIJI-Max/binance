@@ -16,3 +16,4 @@ export * from './util/WsStore';
 export * from './util/usdm';
 export * from './websocket-client';
 export * from './pm-margin-client';
+export * from './pm-um-client';

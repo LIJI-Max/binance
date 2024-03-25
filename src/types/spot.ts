@@ -1858,3 +1858,13 @@ export interface BSwapLiquidity {
   liquidity: { [k: string]: number };
   share: BSwapShare;
 }
+
+export interface BNBBurnParams {
+  spotBNBBurn?: string;
+  interestBNBBurn?: string;
+}
+
+export interface BNBBurnStatusResponse{
+  spotBNBBurn: boolean;
+  interestBNBBurn: boolean;
+}

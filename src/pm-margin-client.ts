@@ -11,7 +11,7 @@ import {
     CancelMarginOrderResponseResult,
     CancelMarginOrderParams,
     MixCancelMarginOrderResponseResult,
-    BasicMarginSymbolParam,
+    BasicMarginSymbolParams,
     CancelOCOMarginOrderResponseResult,
     MarginOrder,
     MarginTradesParams,
@@ -55,8 +55,9 @@ export class PmMarginClient extends BaseRestClient{
     }
 
     submitNewMarginOrder(params: NewMarginOrderParams): Promise<MarginOrderResponseResult>{
-      return this.postPrivate('papi/v1/cm/order', params);
+      return this.postPrivate('papi/v1/margin/order', params);
     }
+
     marginAccountBorrow(params: AccountBorrowParams): Promise<AccountBorrowResponseResult>{
       return this.postPrivate('papi/v1/marginLoan', params);
     }
@@ -73,7 +74,7 @@ export class PmMarginClient extends BaseRestClient{
       return this.deletePrivate('papi/v1/margin/order', params);
     }
 
-    cancelAllSymbolMarginOrders(params: BasicMarginSymbolParam): Promise<MixCancelMarginOrderResponseResult>{
+    cancelAllSymbolMarginOrders(params: BasicMarginSymbolParams): Promise<MixCancelMarginOrderResponseResult>{
       return this.deletePrivate('papi/v1/margin/allOpenOrders', params);
     }
 
@@ -109,7 +110,7 @@ export class PmMarginClient extends BaseRestClient{
       return this.getPrivate('papi/v1/margin/myTrades', params);
     }
 
-    getBalances(params?: AccountBalanceParams): Promise<AccountBalanceResponseResult>{
+    getBalances(params?: AccountBalanceParams): Promise<AccountBalanceResponseResult | AccountBalanceResponseResult[]>{
       return this.getPrivate('papi/v1/balance', params);
     }
 
@@ -122,7 +123,7 @@ export class PmMarginClient extends BaseRestClient{
     }
 
     queryMarginMaxWithdraw(params: BasicMarginAssetParams): Promise<Partial<QueryMaxBorrowResponse>>{
-      return this.getPrivate('papi/v1/margin/maxWithdraw ', params);
+      return this.getPrivate('papi/v1/margin/maxWithdraw', params);
     }
 
     getMarginForceOrders(params: GetMarginForceOrdersParams): Promise<GetMarginForceOrdersResponse>{

@@ -145,7 +145,7 @@ export interface NewMarginOrderParams {
     selfTradePreventionMode?: OrderTradePreventionMode;
   }
 
-  export interface BasicMarginSymbolParam{
+  export interface BasicMarginSymbolParams{
     symbol: string;
   }
 

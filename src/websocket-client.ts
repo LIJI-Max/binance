@@ -333,6 +333,7 @@ export class WebsocketClient extends EventEmitter {
     this.setWsState(wsKey, WsConnectionStateEnum.CONNECTED);
 
     const topics = [...this.wsStore.getTopics(wsKey)];
+    // console.log('topics ', topics);
     if (topics.length) {
       this.requestSubscribeTopics(wsKey, topics);
     }
@@ -392,14 +393,16 @@ export class WebsocketClient extends EventEmitter {
   ) {
     try {
       this.clearPongTimer(wsKey);
-
+      // console.log('event', event);
       const msg = parseRawWsMessage(event);
+      // console.log('message', msg);
 
       // Edge case where raw event does not include event type, detect using wsKey and mutate msg.e
       appendEventIfMissing(msg, wsKey);
       appendEventMarket(msg, wsKey);
 
       const eventType = parseEventTypeFromMessage(msg);
+      // console.log('event_type', eventType);
       if (eventType) {
         this.emit('message', msg);
 
@@ -1850,7 +1853,7 @@ export class WebsocketClient extends EventEmitter {
   ): Promise<WebSocket> {
     try {
       const { listenKey } =
-        await this.getSpotRestClient().getMarginUserDataListenKey();
+        await this.getPmRestClient().getMarginUserDataListenKey();
 
       const market: WsMarket = 'pm';
       const wsKey = getWsKeyWithContext(

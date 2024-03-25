@@ -10,8 +10,11 @@ import { WebsocketClient } from '../src/websocket-client';
 
 // or
 // import { DefaultLogger, WebsocketClient } from 'binance';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 (async () => {
+
   const key = process.env.APIKEY || 'APIKEY';
   const secret = process.env.APISECRET || 'APISECRET';
 
@@ -128,7 +131,7 @@ import { WebsocketClient } from '../src/websocket-client';
   wsClient.subscribeSpotUserDataStream();
   // wsClient.subscribeMarginUserDataStream();
   // wsClient.subscribeIsolatedMarginUserDataStream('BTCUSDT');
-  wsClient.subscribeUsdFuturesUserDataStream();
+  // wsClient.subscribeUsdFuturesUserDataStream();
 
   // setTimeout(() => {
   //   console.log('killing all connections');

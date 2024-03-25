@@ -192,6 +192,8 @@ import {
   NewSpotSOROrderParams,
   SOROrderResponseFull,
   SORTestOrderResponse,
+  BNBBurnStatusResponse,
+  BNBBurnParams,
 } from './types/spot';
 
 import {
@@ -1075,6 +1077,13 @@ export class MainClient extends BaseRestClient {
   // TODO - https://binance-docs.github.io/apidocs/spot/en/#get-all-isolated-margin-symbol-user_data
 
   // TODO - https://binance-docs.github.io/apidocs/spot/en/#toggle-bnb-burn-on-spot-trade-and-margin-interest-user_data
+  getBnbBurnStatus():Promise<BNBBurnStatusResponse>{
+    return this.getPrivate('sapi/v1/bnbBurn');
+  }
+
+  toggleBnbBurnStatus(params: BNBBurnParams):Promise<BNBBurnStatusResponse>{
+    return this.postPrivate('sapi/v1/bnbBurn', params);
+  }
 
   // TODO - https://binance-docs.github.io/apidocs/spot/en/#get-bnb-burn-status-user_data
 
