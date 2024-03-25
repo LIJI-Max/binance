@@ -22,7 +22,8 @@ const symbol = 'ETHUSDT';
     const assetPrices = await client.getMarkPrice({
       symbol: "ETHUSDT"
     })
-    const markPrice: number = Number(assetPrices.markPrice)
+
+    const markPrice: number = Number(assetPrices[0].markPrice)
     const stopLossPrice = Number(markPrice * 99.9 / 100).toFixed(2)
     const takeProfitPrice = Number(markPrice * 100.1 / 100).toFixed(2)
 

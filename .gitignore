@@ -6,3 +6,5 @@ util/config.js
 coverage/
 yarn-error.log
 lib/*
+.env
+package-lock.json

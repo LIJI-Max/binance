@@ -26,6 +26,7 @@ import { safeTerminateWs } from './util/ws-utils';
 
 import WsStore, { WsConnectionStateEnum } from './util/WsStore';
 import { CoinMClient } from './coinm-client';
+import { PmMarginClient } from './pm-margin-client';
 
 const wsBaseEndpoints: Record<WsMarket, string> = {
   spot: 'wss://stream.binance.com:9443',
@@ -37,6 +38,7 @@ const wsBaseEndpoints: Record<WsMarket, string> = {
   coinmTestnet: 'wss://dstream.binancefuture.com',
   options: 'wss://vstream.binance.com',
   optionsTestnet: 'wss://testnetws.binanceops.com',
+  pm: 'wss://fstream.binance.com/pm',
 };
 
 const loggerCategory = { category: 'binance-ws' };
@@ -76,7 +78,8 @@ export type WsKey =
   | 'margin'
   | 'usdmfutures'
   | 'coinmfutures'
-  | 'options';
+  | 'options'
+  | 'pm';
 
 type WsEventInternalSrc = 'event' | 'function';
 
@@ -87,6 +90,7 @@ interface RestClientStore {
   usdmFuturesTestnet: USDMClient;
   coinmFutures: CoinMClient;
   coinmFuturesTestnet: CoinMClient;
+  pm: PmMarginClient;
   // options: MainClient;
 }
 
@@ -753,6 +757,16 @@ export class WebsocketClient extends EventEmitter {
     this.wsStore.setConnectionState(wsKey, state);
   }
 
+  private getPmRestClient(): PmMarginClient{
+    if (!this.restClients.pm){
+      this.restClients.pm = new PmMarginClient(
+        this.getRestClientOptions(),
+        this.options.requestOptions,
+      );
+    }
+    return this.restClients.pm;
+  }
+
   private getSpotRestClient(): MainClient {
     if (!this.restClients.spot) {
       this.restClients.spot = new MainClient(
@@ -802,6 +816,8 @@ export class WebsocketClient extends EventEmitter {
     }
     return this.restClients.coinmFutures;
   }
+
+  
 
   /**
    * Send WS message to subscribe to topics. Use subscribe() to call this.
@@ -965,6 +981,8 @@ export class WebsocketClient extends EventEmitter {
         return this.getUSDMRestClient(
           isTestnet,
         ).keepAliveFuturesUserDataListenKey();
+      case 'pm':
+        return this.getPmRestClient().keepAliveMarginUserDataListenKey();
       default:
         throwUnhandledSwitch(
           market,
@@ -1137,6 +1155,11 @@ export class WebsocketClient extends EventEmitter {
             isReconnecting,
           );
           break;
+        case 'pm':
+          ws = await this.subscribePmUserDataStream(
+            forceNewConnection,
+            isReconnecting,
+          );
         case 'options':
         case 'optionsTestnet':
           throw new Error(
@@ -1821,7 +1844,7 @@ export class WebsocketClient extends EventEmitter {
   /**
    * Subscribe to margin user data stream - listen key is automatically generated.
    */
-  public async subscribeMarginUserDataStream(
+  public async subscribePmUserDataStream(
     forceNewConnection?: boolean,
     isReconnecting?: boolean,
   ): Promise<WebSocket> {
@@ -1829,7 +1852,7 @@ export class WebsocketClient extends EventEmitter {
       const { listenKey } =
         await this.getSpotRestClient().getMarginUserDataListenKey();
 
-      const market: WsMarket = 'margin';
+      const market: WsMarket = 'pm';
       const wsKey = getWsKeyWithContext(
         market,
         'userData',
@@ -2052,6 +2075,64 @@ export class WebsocketClient extends EventEmitter {
         error: e,
       });
       this.emit('error', { wsKey: 'coinm' + '_' + 'userData', error: e });
+    }
+  }
+
+  public async subscribeMarginUserDataStream(
+    isTestnet?: boolean,
+    forceNewConnection?: boolean,
+    isReconnecting?: boolean,
+  ): Promise<WebSocket> {
+    try {
+      const { listenKey } = await this.getCOINMRestClient(
+        isTestnet,
+      ).getFuturesUserDataListenKey();
+
+      const market: WsMarket = isTestnet ? 'coinmTestnet' : 'coinm';
+      const wsKey = getWsKeyWithContext(
+        market,
+        'userData',
+        undefined,
+        listenKey,
+      );
+
+      if (!forceNewConnection && this.wsStore.isWsConnecting(wsKey)) {
+        this.logger.silly(
+          'Existing usd futures user data connection in progress for listen key. Avoiding duplicate',
+        );
+        return this.getWs(wsKey);
+      }
+
+      // Necessary so client knows this is a reconnect
+      this.setWsState(
+        wsKey,
+        isReconnecting
+          ? WsConnectionStateEnum.RECONNECTING
+          : WsConnectionStateEnum.CONNECTING,
+      );
+      const ws = this.connectToWsUrl(
+        this.getWsBaseUrl(market, wsKey) + `/ws/${listenKey}`,
+        wsKey,
+        forceNewConnection,
+      );
+
+      // Start & store timer to keep alive listen key (and handle expiration)
+      this.setKeepAliveListenKeyTimer(
+        listenKey,
+        market,
+        ws,
+        wsKey,
+        undefined,
+        isTestnet,
+      );
+
+      return ws;
+    } catch (e) {
+      this.logger.error(`Failed to connect to COIN Futures user data`, {
+        ...loggerCategory,
+        error: e,
+      });
+      this.emit('error', { wsKey: 'pm' + '_' + 'userData', error: e });
     }
   }
 }

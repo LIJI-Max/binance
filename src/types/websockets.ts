@@ -29,7 +29,8 @@ export type WsMarket =
   | 'coinm'
   | 'coinmTestnet'
   | 'options'
-  | 'optionsTestnet';
+  | 'optionsTestnet'
+  | 'pm';
 
 export type WsRawSpotUserDataEventRaw =
   | WsMessageSpotUserDataExecutionReportEventRaw

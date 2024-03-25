@@ -18,7 +18,8 @@ export type BinanceBaseUrlKey =
   | 'coinm'
   | 'coinmtest'
   | 'voptions'
-  | 'voptionstest';
+  | 'voptionstest'
+  | 'pm';
 
 /**
  * Time in force. Note: `GTE_GTC` is not officially documented, use at your own risk.
@@ -80,6 +81,12 @@ export type OrderType =
   | 'STOP_LOSS_LIMIT'
   | 'TAKE_PROFIT'
   | 'TAKE_PROFIT_LIMIT';
+
+export type OrderTradePreventionMode = 'NONE' | 'EXPIRE_TAKER' | 'EXPIRE_MAKER' | 'EXPIRE_BOTH';
+
+export type AccountStatus = 'NORMAL' | 'MARGIN_CALL' | 'SUPPLY_MARGIN' | 'REDUCE_ONLY' | 'ACTIVE_LIQUIDATION' | 'FORCE_LIQUIDATION' | 'BANKRUPTED'
+
+export type MarginInterestType = 'PERIODIC' | 'ON_BORROW' | 'PERIODIC_CONVERTED' | 'ON_BORROW_CONVERTED'
 
 export interface BasicAssetParam {
   asset: string;
