@@ -356,7 +356,7 @@ async function testBuySpotOrder(){
 (async () => {
     // testBuyMarginOrder();
     // testCancelOrder();
-    testCancelAllSymbolMarginOrders();
+    // testCancelAllSymbolMarginOrders();
     // testGetMarginOrder();
     // testGetOpenMarginOrders();
     // testAllMarginOrders();

@@ -21,9 +21,9 @@ dotenv.config();
   const logger = {
     ...DefaultLogger,
     silly: (msg, context) => {
-    //   if (ignoredSillyLogMsgs.includes(msg)) {
-    //     return;
-    //   }
+      if (ignoredSillyLogMsgs.includes(msg)) {
+        return;
+      }
       console.log(JSON.stringify({ msg, context }));
     },
   };
@@ -32,14 +32,15 @@ dotenv.config();
     {
       api_key: key,
       api_secret: secret,
-    //   beautify: true,
+      beautify: true,
     //   pingInterval: 10000
     },
     logger
   );
 
   wsClient.on('message', (data) => {
-    console.log('raw message received ', JSON.stringify(data, null, 2));
+    // console.log('raw message received ', JSON.stringify(data, null, 2));
+
   });
 
   function onUserDataEvent(data: WsUserDataEvents) {

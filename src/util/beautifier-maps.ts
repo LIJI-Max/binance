@@ -157,6 +157,7 @@ export const BEAUTIFIER_EVENT_MAP = {
     e: 'eventType',
     E: 'eventTime',
     u: 'lastUpdateTime',
+    U: 'eventUpdateId',
     B: 'balances',
   },
   balanceUpdateEvent: {
@@ -164,6 +165,7 @@ export const BEAUTIFIER_EVENT_MAP = {
     E: 'eventTime',
     a: 'asset',
     d: 'balanceDelta',
+    U: 'eventUpdateId',
     T: 'clearTime',
   },
   indexPriceUpdateEvent: {
@@ -335,6 +337,7 @@ export const BEAUTIFIER_EVENT_MAP = {
     q: 'quantity',
     p: 'price',
     P: 'stopPrice',
+    d: 'trailingDelta', //Add for portfolio margin account
     F: 'icebergQuantity',
     g: 'orderListId',
     C: 'originalClientOrderId',
@@ -349,6 +352,7 @@ export const BEAUTIFIER_EVENT_MAP = {
     N: 'commissionAsset',
     T: 'tradeTime',
     t: 'tradeId',
+    v: 'preventedMatchId', //Add for portfolio margin account
     I: 'ignoreThis1',
     w: 'isOrderOnBook',
     m: 'isMaker',
@@ -357,6 +361,15 @@ export const BEAUTIFIER_EVENT_MAP = {
     Z: 'cummulativeQuoteAssetTransactedQty',
     Y: 'lastQuoteAssetTransactedQty',
     Q: 'orderQuoteQty',
+    D: 'trailingTime', //Add for portfolio margin account
+    j: 'strategyId', //Add for portfolio margin account
+    J: 'strategyType', //Add for portfolio margin account
+    W: 'workingTime', //Add for portfolio margin account
+    V: 'selfTradePreventionMode', //Add for portfolio margin account
+    u: 'tradeGroupId', //Add for portfolio margin account
+    U: 'counterOrderId', //Add for portfolio margin account
+    A: 'preventedQuantity', //Add for portfolio margin account
+    B: 'lastPreventedQuantity', //Add for portfolio margin account
   },
   tradeEvent: {
     e: 'eventType',
@@ -429,4 +442,25 @@ export const BEAUTIFIER_EVENT_MAP = {
     z: 'orderFilledAccumulatedQuantity',
     T: 'orderTradeTime',
   },
+  liabilityChangeEvent:{
+    e: 'eventType',
+    E: 'eventTime',
+    a: 'asset',
+    t: 'type',
+    tx: 'trxId',
+    p: 'principal',
+    i: 'interest',
+    l: 'totalLiability'
+  },
+  openOrderLossEvent: {
+    e: 'eventType',
+    E: 'eventTime',
+    O: 'loss'
+  },
+  loss: [
+    {
+      a: 'asset',
+      o: 'amount'
+    }
+  ]
 };

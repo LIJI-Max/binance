@@ -432,6 +432,7 @@ export class WebsocketClient extends EventEmitter {
               [
                 'balanceUpdate',
                 'executionReport',
+                // 'openOrderLoss',
                 'listStatus',
                 'listenKeyExpired',
                 'outboundAccountPosition',

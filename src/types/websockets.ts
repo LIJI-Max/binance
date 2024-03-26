@@ -17,6 +17,7 @@ import {
   OrderSide,
   OrderStatus,
   OrderTimeInForce,
+  OrderTradePreventionMode,
   OrderType,
 } from './shared';
 
@@ -43,6 +44,10 @@ export type WsMessageSpotUserDataEventFormatted =
   | WsMessageSpotOutboundAccountPositionFormatted
   | WsMessageSpotBalanceUpdateFormatted
   | WsMessageSpotUserDataListStatusEventFormatted;
+
+export type WsMessagePmUserDataEventFormatted = 
+  | WsMessagePmUserDataLiabilityUpdateEventFormatted
+  | WsMessagePmUserDataOpenOrderLosssEventFormattted;
 
 export type WsMessageFuturesUserDataEventRaw =
   | WsMessageFuturesUserDataAccountUpdateRaw
@@ -101,7 +106,8 @@ export type WsFormattedMessage =
 
 export type WsUserDataEvents =
   | WsMessageSpotUserDataEventFormatted
-  | WsMessageFuturesUserDataEventFormatted;
+  | WsMessageFuturesUserDataEventFormatted
+  | WsMessagePmUserDataEventFormatted;
 
 interface WsSharedBase {
   wsMarket: WsMarket;
@@ -428,6 +434,7 @@ export interface WsMessageSpotOutboundAccountPositionFormatted
   eventType: 'outboundAccountPosition';
   eventTime: number;
   lastAccountUpdateTime: number;
+  eventUpdateId?: number;
   balances: SpotBalanceFormatted[];
 }
 
@@ -444,6 +451,7 @@ export interface WsMessageSpotBalanceUpdateFormatted extends WsSharedBase {
   eventTime: number;
   asset: string;
   balanceDelta: number;
+  eventUpdateId?: number;
   clearTime: number;
 }
 
@@ -495,6 +503,7 @@ export interface WsMessageSpotUserDataExecutionReportEventFormatted
   quantity: number;
   price: number;
   stopPrice: number;
+  trailingDelta?: number;
   icebergQuantity: number;
   orderListId: number;
   originalClientOrderId: string;
@@ -509,6 +518,7 @@ export interface WsMessageSpotUserDataExecutionReportEventFormatted
   commissionAsset: string | null;
   tradeTime: number;
   tradeId: number;
+  preventedMatchId?: number;
   ignoreThis1: number;
   isOrderOnBook: false;
   isMaker: false;
@@ -517,6 +527,15 @@ export interface WsMessageSpotUserDataExecutionReportEventFormatted
   cummulativeQuoteAssetTransactedQty: number;
   lastQuoteAssetTransactedQty: number;
   orderQuoteQty: number;
+  trailingTime?: number;
+  strategyId?: number;
+  strategyType?: number;
+  workingTime?: number;
+  selfTradePreventionMode?: OrderTradePreventionMode;
+  tradeGroupId?: number;
+  counterOrderId?: number;
+  preventedQuantity?: numberInString;
+  lastPreventedQuantity?: numberInString;
 }
 
 export interface OrderObjectRaw {
@@ -885,3 +904,27 @@ export interface WsMessageForceOrderRaw extends WsSharedBase {
     T: number;
   };
 }
+
+export interface WsMessagePmUserDataLiabilityUpdateEventFormatted extends WsSharedBase{
+  eventType: 'liabilityChange';
+  eventTime: number;
+  asset: string;
+  type: string;
+  trxId: number;
+  principal: numberInString;
+  interest: numberInString;
+  totalLiability: numberInString;
+}
+
+export interface WsMessagePmUserDataOpenOrderLosssEventFormattted extends WsSharedBase{
+  eventType: 'openOrderLoss';
+  eventTime: number;
+  loss: [
+    {
+      asset: string;
+      amount: numberInString
+    }
+  ]
+}
+
+
