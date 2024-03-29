@@ -5,7 +5,7 @@ import {
   isWsFormattedKline,
   isWsFormatted24hrTickerArray,
   isWsFormattedRollingWindowTickerArray,
-  isWsFormattedSpotBookerTIckerEvent,
+  isWsFormattedSpotBookerTickerEvent,
 } from '../src';
 
 // or, with the npm package
@@ -80,7 +80,7 @@ dotenv.config();
       return;
     }
 
-    if(isWsFormattedSpotBookerTIckerEvent(data)){
+    if(isWsFormattedSpotBookerTickerEvent(data)){
       console.log(
         'Spot Symbol Ticker',
         JSON.stringify(data, null, 2),
