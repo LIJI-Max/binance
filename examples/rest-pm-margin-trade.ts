@@ -58,13 +58,14 @@ async function testBuyMarginOrder(){
   const buyAmountBtc = +(buyAmountValue / Number(lastPrice)).toFixed(assetDecimalPlaces);
   console.log(`Executing trade with BTC = ${buyAmountBtc} with USDT = ${buyAmountValue} value`);
 
-  const orderId = uuidv4();
+  // const orderId = uuidv4();
+  const orderId = "3cf77fc2-4bfe-492a-b9ca-0b281a3e5101";
   const buyOrderRequest: NewMarginOrderParams = {
       symbol: symbol,
       quantity: buyAmountBtc,
       side: 'BUY',
       type: 'LIMIT_MAKER',
-      price: 60000,
+      price: 59999,
       newClientOrderId: orderId,
       // timeInForce: 'GTC',
       /**
@@ -327,7 +328,8 @@ async function testBuySpotOrder(){
   const buyAmountBtc = +(buyAmountValue / Number(lastPrice)).toFixed(assetDecimalPlaces);
   console.log(`Executing trade with BTC = ${buyAmountBtc} with USDT = ${buyAmountValue} value`);
 
-  const orderId = uuidv4();
+  // const orderId = uuidv4();
+  const orderId = "6f2e4bcf-33f6-48dd-9d94-1d773326840e";
   const buyOrderRequest: NewMarginOrderParams = {
       symbol: 'BNBUSDT',
       quantity: 0.01,
@@ -353,6 +355,15 @@ async function testBuySpotOrder(){
   }
 }
 
+async function testExchangeInfo(){
+  try{
+    const exchangeInfoResult = await mainClient.getExchangeInfo();
+    console.log(`Exchange Info Results `,  JSON.stringify({Response: exchangeInfoResult}));
+  } catch(e){
+    console.error('Error: request failed: ', e);
+  }
+}
+
 (async () => {
     // testBuyMarginOrder();
     // testCancelOrder();
@@ -372,6 +383,7 @@ async function testBuySpotOrder(){
     // testGetBnbBurnStatus();
     // testToggleBnbBurnStatus();
     // testBuySpotOrder();
+    testExchangeInfo();
     // process.exit(1);
 })();
   

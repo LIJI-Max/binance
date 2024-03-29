@@ -5,6 +5,7 @@ import {
   isWsFormattedKline,
   isWsFormatted24hrTickerArray,
   isWsFormattedRollingWindowTickerArray,
+  isWsFormattedSpotBookerTIckerEvent,
 } from '../src';
 
 // or, with the npm package
@@ -17,9 +18,13 @@ import {
 } from 'binance';
 */
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 (async () => {
-  const key = 'APIKEY';
-  const secret = 'APISECRET';
+  // key & secrets are loaded
+  const key = process.env.APIKEY || 'APIKEY';
+  const secret = process.env.APISECRET || 'APISECRET';
 
   const market = 'BTCUSDT';
   const coinMSymbol = 'AVAXUSD_PERP';
@@ -41,7 +46,7 @@ import {
   );
 
   wsClient.on('message', (data) => {
-    console.log('raw message received ', JSON.stringify(data[0], null, 2));
+    // console.log('raw message received ', JSON.stringify(data, null, 2));
   });
 
   wsClient.on('formattedMessage', (data) => {
@@ -75,6 +80,13 @@ import {
       return;
     }
 
+    if(isWsFormattedSpotBookerTIckerEvent(data)){
+      console.log(
+        'Spot Symbol Ticker',
+        JSON.stringify(data, null, 2),
+      );
+      return;
+    }
     console.log('log formattedMessage: ', data);
     // console.log('log formattedMessage: ', JSON.stringify(data[0], null, 2));
   });
@@ -125,5 +137,6 @@ import {
   // wsClient.subscribeAggregateTrades(market, 'usdm');
   // wsClient.subscribeSpotPartialBookDepth('ETHBTC', 5, 1000);
 
-  wsClient.subscribeAllRollingWindowTickers('spot', '1d');
+  // wsClient.subscribeAllRollingWindowTickers('spot', '1d');
+  wsClient.subscribeSpotSymbolBookTicker('BTCUSDT');
 })();

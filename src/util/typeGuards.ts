@@ -130,6 +130,12 @@ export function isWsFormattedUserDataEvent(
   return !Array.isArray(data) && data.wsKey.includes('userData');
 }
 
+export function isWsFormattedSpotBookerTIckerEvent(
+  data: WsFormattedMessage,
+): data is WsUserDataEvents {
+  return !Array.isArray(data) && data.wsKey.includes('spot_bookTicker');
+}
+
 export function isWsFormattedSpotUserDataEvent(
   data: WsFormattedMessage,
 ): data is WsMessageSpotUserDataEventFormatted {
