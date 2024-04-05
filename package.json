@@ -1,8 +1,8 @@
 {
   "name": "binance-pm",
-  "version": "2.10.8",
+  "version": "2.10.9",
   "description": "Node.js & JavaScript SDK for Binance REST APIs & WebSockets, with TypeScript & end-to-end tests.",
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "types": "lib/index.d.ts",
   "files": [
     "lib/*",

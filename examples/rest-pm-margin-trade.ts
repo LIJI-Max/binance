@@ -21,7 +21,7 @@ const mainClient = new MainClient({
 
   
 const entryAmountPercent = 50;// trigger trade with 50%
-const symbol = 'BTCUSDT';
+const symbol = 'ETHUSDT';
 const assetDecimalPlaces = 4;
 
 
@@ -54,7 +54,7 @@ async function testBuyMarginOrder(){
     return console.error('Error: no price returned');
   }
 
-  const buyAmountValue = 10;
+  const buyAmountValue = 20;
   const buyAmountBtc = +(buyAmountValue / Number(lastPrice)).toFixed(assetDecimalPlaces);
   console.log(`Executing trade with BTC = ${buyAmountBtc} with USDT = ${buyAmountValue} value`);
 
@@ -63,9 +63,9 @@ async function testBuyMarginOrder(){
   const buyOrderRequest: NewMarginOrderParams = {
       symbol: symbol,
       quantity: buyAmountBtc,
-      side: 'BUY',
+      side: 'SELL',
       type: 'LIMIT_MAKER',
-      price: 59999,
+      price: 3500,
       newClientOrderId: orderId,
       // timeInForce: 'GTC',
       /**
@@ -252,9 +252,13 @@ async function testQueryMarginWithdraw(){
 
 async function testMarginAccountBorrow(){
   try{
+    // const accountBorrowParams: AccountBorrowParams = {
+    //   asset: "BTC",
+    //   amount: 0.0001
+    // }
     const accountBorrowParams: AccountBorrowParams = {
-      asset: "BTC",
-      amount: 0.0001
+      asset: "USDT",
+      amount: 1
     }
     console.log(`Margin Account Borrow Params: `, accountBorrowParams);
     const accountBorrowResponseResult = await pmClient.marginAccountBorrow(accountBorrowParams);
@@ -267,9 +271,13 @@ async function testMarginAccountBorrow(){
 
 async function testMarginAccountRepay(){
   try{
+    // const accountRepayParams: AccountBorrowParams = {
+    //   asset: "BTC",
+    //   amount: 0.0001
+    // }
     const accountRepayParams: AccountBorrowParams = {
-      asset: "BTC",
-      amount: 0.0001
+      asset: "ETH",
+      amount: 0.006
     }
     console.log(`Margin Account Repay Params: `, accountRepayParams);
     const accountRepayResponseResult = await pmClient.marginAccountRepay(accountRepayParams);
@@ -370,7 +378,7 @@ async function testExchangeInfo(){
     // testCancelAllSymbolMarginOrders();
     // testGetMarginOrder();
     // testGetOpenMarginOrders();
-    // testAllMarginOrders();
+    testAllMarginOrders();
     // testGetMarginAccountTradeList();
     // testQueryMarginLoanRecord();
     // testQueryMarginRepayRecord();
@@ -383,7 +391,7 @@ async function testExchangeInfo(){
     // testGetBnbBurnStatus();
     // testToggleBnbBurnStatus();
     // testBuySpotOrder();
-    testExchangeInfo();
+    // testExchangeInfo();
     // process.exit(1);
 })();
   

@@ -161,16 +161,18 @@ export default class Beautifier {
       return this.beautifyArrayValues(data);
     }
     const beautifedObject = {};
-    for (const [key, val] of Object.entries(data)) {
-      const type = typeof val;
-      if (Array.isArray(val)) {
-        beautifedObject[key] = this.beautifyArrayValues(val, key);
-      } else if (key === 'e' && type === 'string') {
-        beautifedObject['eventType'] = this.beautifyValueWithKey(key, val);
-      } else if (type === 'object') {
-        beautifedObject[key] = this.beautifyObjectValues(val);
-      } else {
-        beautifedObject[key] = this.beautifyValueWithKey(key, val);
+    if(data != null){
+      for (const [key, val] of Object.entries(data)) {
+        const type = typeof val;
+        if (Array.isArray(val)) {
+          beautifedObject[key] = this.beautifyArrayValues(val, key);
+        } else if (key === 'e' && type === 'string') {
+          beautifedObject['eventType'] = this.beautifyValueWithKey(key, val);
+        } else if (type === 'object') {
+          beautifedObject[key] = this.beautifyObjectValues(val);
+        } else {
+          beautifedObject[key] = this.beautifyValueWithKey(key, val);
+        }
       }
     }
     return beautifedObject;
